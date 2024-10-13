@@ -37,44 +37,6 @@ const saveTimestamp = (newTimestamp) => {
     fs.writeFileSync(timestampFilePath, newTimestamp.toISOString(), 'utf-8');
 };
 
-// GET route to fetch data from an external API
-app.get('/', async (req, res) => {
-    try {
-        const response = await axios.get(configApiUrl, { headers: axiosHeaders });
-
-        // Send the fetched data back to the client
-        res.json({
-            apiData: response.data
-        });
-    } catch (error) {
-        console.error('Error fetching data from external API:', error.message);
-        res.status(500).json({ error: 'Failed to fetch data from external API' });
-    }
-});
-
-// POST route to interact with the Shopware API
-app.post('/search-order', async (req, res) => {
-    try {
-        const options = {
-            method: 'POST',
-            url: shopwareApiUrl,
-            headers: axiosHeaders, // Use the same headers as the GET request
-            data: req.body         // Pass the request body to the external API
-        };
-
-        // Perform the POST request to the Shopware API
-        const response = await axios.request(options);
-
-        // Send the API response and custom calculated data back to the client
-        res.json({
-            apiData: response.data
-        });
-    } catch (error) {
-        console.error('Error fetching data from Shopware API:', error.message);
-        res.status(500).json({ error: 'Failed to fetch data from Shopware API' });
-    }
-});
-
 // New POST route to fetch and process orders based on the saved timestamp
 app.post('/fetch-orders', async (req, res) => {
     try {
